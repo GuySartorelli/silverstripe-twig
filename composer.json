@@ -1,0 +1,24 @@
+{
+    "name": "guysartorelli/silverstripe-twig",
+    "description": "Twig template rendering engine for Silverstripe CMS",
+    "type": "agagagsilverstripe-vendormodule",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "silverstripe",
+        "twig",
+        "templates"
+    ],
+    "require": {
+        "php": "^8.3",
+        "silverstripe/framework": "^6",
+        "twig/twig": "^3.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "GuySartorelli\\Twig\\": "src/",
+            "GuySartorelli\\Twig\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
