@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Simple. by Sara (saratusar.com, @saratusar) for Innovatif - an awesome Slovenia-based digital agency (innovatif.com/en)
+Change it, enhance it and most importantly enjoy it!
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-->
+
+<html lang="{{ ContentLocale }}">
+<head>
+	{% base_tag %}
+	<title>{% if model.MetaTitle %}{{ model.MetaTitle }}{% else %}{{ model.Title }}{% endif %} &raquo; {{ SiteConfig.Title }}</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	{{ model.MetaTags(false) }}
+	{% require themedCSS('reset') %}
+	{% require themedCSS('typography') %}
+	{% require themedCSS('form') %}
+	{% require themedCSS('layout') %}
+	<link rel="shortcut icon" href="{{ themedResourceURL('images/favicon.ico') }}" />
+</head>
+{# example here of using getRawDataValue, since we can't just use {% if not model.Menu(2).exists %} #}
+<body class="{{ model.ClassName.ShortName }}{% if not model.Menu(2).getRawDataValue('exists') %} no-sidebar{% endif %}" {% if i18nScriptDirection %}dir="{{ i18nScriptDirection }}"{% endif %}>
+{{ include('Includes/Header.twig') }}
+<div class="main" role="main">
+	<div class="inner typography line">
+		{{ include('Layout/Page.twig') }} {# Obviously this would be done using template inheritance instead in a real project #}
+	</div>
+</div>
+{{ include('Includes/Footer.twig') }}
+
+{% require javascript('//code.jquery.com/jquery-3.7.1.min.js') %}
+{% require themedJavascript('script') %}
+
+</body>
+</html>

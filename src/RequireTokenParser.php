@@ -7,7 +7,7 @@ use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenStream;
 
 /**
- * Parser that allows usage of `` in a template to interact with the Silverstripe CMS Requirements API
+ * Parser that allows interaction with the Silverstripe CMS Requirements API from inside a twig template
  *
  * Simply use `{% require %}` the same way you'd use `<% require %>` e.g. `{% require themedCSS("some-file.css") %}`
  */

@@ -1,0 +1,8 @@
+<nav class="primary">
+	<button class="nav-open-button">²</button>
+	<ul>
+        {% for child in model.Menu(1) %}
+			<li class="{{ child.LinkingMode }}"><a href="{{ child.Link }}" title="{{ child.Title.XML }}">{{ child.MenuTitle.XML }}</a></li>
+        {% endfor %}
+	</ul>
+</nav>

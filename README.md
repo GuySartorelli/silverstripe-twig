@@ -32,6 +32,12 @@ Don't use twig's [`asset()` function](https://symfony.com/doc/current/templates.
 
 Don't use twig's localisation syntax - instead use `{{ _t }}` e.g. `{{ _t('My.Localisation.Key', 'Default {var} goes here', {'var': 'string'}) }}`. This maps more closely to the PHP `_t()` function than it does Silverstripe CMS's ss template syntax for localisations.
 
+Twig doesn't call `exists()` or `count()` on a list to see if it's got content. So `{% if model.MyList %}` will always return truthy. You need to explicitly call either `count` i.e. `{% if model.MyList.count() > 0 %}`
+
+You **CANNOT** use any method/property that returns a scalar directly in a twig `{% if %}` condition. `ViewLayerData` will return a `ViewLayerData` wrapping a `DBBoolean` wrapping the actual value. Since `ViewLayerData` is an object which is truthy, twig will just treat it as true even if the value contained in the `DBBoolean` is false. Even with conditions, it'll be trying to compare `ViewLayerData` which will usually result in an error.
+The one exception to this is `count()` which is explicitly implemented on `ViewLayerData`.
+You can work around this using `getRawDataValue()`, e.g. `{% if model.getRawDataValue('MyField') %}`
+
 There are a few ways to swap out rendering engines as of the time of writing:
 
 ### Globally override the normal one via dependency injection
@@ -49,7 +55,9 @@ SilverStripe\Core\Injector\Injector:
 
 Note that this will also be used by default for all string template rendering unless I change how that works in framework. So that may cause problems for you in a few places.
 
-### For a specific controller
+### For a specific controller or model
+
+#### Controllers
 
 It's possible I'll change how this works - likely adding a config property for it - but for now you'd need to override the `getTemplateEngine()` method on your controller.
 
@@ -75,7 +83,29 @@ When this controller is rendered (e.g. via `handleAction()` or directly calling 
 
 All includes invoked in your template will also be rendered by the twig template engine - but if another controller is invoked (e.g. rendering an elemental area), it will use whatever engine is set for it.
 
-Note that for now there's no way to select a template engine for a model, so `forTemplate()` (or even directly calling `renderWith()`) on a `ModelData` (except on a controller) will _not_ use this controller's rendering engine.
+#### Models
+
+There's no `getTemplateEngine()` method in `ModelData`. Instead, you'll need to override `renderWith()` like so:
+
+```php
+use GuySartorelli\Twig\TwigTemplateEngine;
+use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
+class MyModel extends ModelData
+{
+    // ...
+
+    public function renderWith($template, ModelData|array $customFields = []): DBHTMLText
+    {
+        // Ensure MY template engine is used, unless the viewer was already explicitly instantiated
+        if (!($template instanceof SSViewer)) {
+            $template = SSViewer::create($template, TwigTemplateEngine::create());
+        }
+        return parent::renderWith($template, $customFields);
+    }
+}
+```
 
 ### For a given instance of `SSViewer`
 
