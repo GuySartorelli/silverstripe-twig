@@ -32,7 +32,7 @@ Don't use twig's [`asset()` function](https://symfony.com/doc/current/templates.
 
 Don't use twig's localisation syntax - instead use `{{ _t }}` e.g. `{{ _t('My.Localisation.Key', 'Default {var} goes here', {'var': 'string'}) }}`. This maps more closely to the PHP `_t()` function than it does Silverstripe CMS's ss template syntax for localisations.
 
-Twig doesn't call `exists()` or `count()` on a list to see if it's got content. So `{% if model.MyList %}` will always return truthy. You need to explicitly call either `count` i.e. `{% if model.MyList.count() > 0 %}`
+Twig doesn't call `exists()` or `count()` on a list to see if it's got content. So `{% if model.MyList %}` will always return truthy.
 
 You **CANNOT** use any method/property that returns a scalar directly in a twig `{% if %}` condition. `ViewLayerData` will return a `ViewLayerData` wrapping a `DBBoolean` wrapping the actual value. Since `ViewLayerData` is an object which is truthy, twig will just treat it as true even if the value contained in the `DBBoolean` is false. Even with conditions, it'll be trying to compare `ViewLayerData` which will usually result in an error.
 The one exception to this is `count()` which is explicitly implemented on `ViewLayerData`.

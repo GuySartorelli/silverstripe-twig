@@ -30,7 +30,7 @@ class BaseTagParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         $isXhtml = strtolower($type) === 'xhtml';
-        return new TextNode(SSViewer::get_base_tag($isXhtml), $token->getLine());
+        return new TextNode(SSViewer::getBaseTag($isXhtml), $token->getLine());
     }
 
     /**

@@ -20,7 +20,7 @@ class TwigTemplateEngine implements TemplateEngine
 {
     use Injectable;
 
-    private string $template;
+    private ?string $template = null;
 
     private Environment $twig;
 
@@ -31,6 +31,7 @@ class TwigTemplateEngine implements TemplateEngine
 
     public function __construct(string|array $templateCandidates = [])
     {
+        $this->setTemplate($templateCandidates);
         $this->twig = $this->getEngine();
     }
 
